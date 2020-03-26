@@ -1,0 +1,37 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <!--STUDENT TABLE-->
+    <changeSet id="createTables" author="Juan Simancas">
+        <createTable catalogName="academy" tableName="student">
+            <column name="student_rut" type="integer">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="student_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="student_lastname" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="student_age" type="integer">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!--COURSE TABLE-->
+        <createTable catalogName="academy" tableName="course">
+            <column name="course_code" type="Integer" autoIncrement="true" incrementBy="1" startWith="2201">
+                <constraints  primaryKey="true" nullable="false"/>
+            </column>
+            <column name="course_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

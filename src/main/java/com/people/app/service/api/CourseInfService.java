@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,5 +35,24 @@ public class CourseInfService {
 
     public Course getCourseById(int id) {
         return courseRepository.findCourseByCode(id);
+    }
+
+    public int createCourse(Course course) throws Exception {
+        Course response = courseRepository.save(course);
+        Optional<Course> validate = courseRepository.findById(response.getCode());
+        if (validate.get().getCode() != 0) {
+            return 1;
+        }
+        return 0;
+    }
+
+    public void updateCourse(int id, Course course){
+        Course query = courseRepository.findById(id).get();
+        query.setName(course.getName());
+        courseRepository.save(query);
+    }
+
+    public void deleteCourse(int id) throws Exception{
+        courseRepository.deleteById(id);
     }
 }

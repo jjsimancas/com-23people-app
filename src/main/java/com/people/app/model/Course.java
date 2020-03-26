@@ -15,6 +15,7 @@ public class Course {
     private int code;
 
     @Column(name = "course_name")
+    @JsonProperty("name")
     private String name;
 
     public int getCode() {

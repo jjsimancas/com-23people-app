@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +16,10 @@ import java.util.List;
 public class ApiController {
 
     @Value("${record.not.found}")
-    private String message;
+    private String messageNotfound;
+
+    @Value("${save.rollback}")
+    private String messageRollback;
 
     private final CourseInfService courseInfService;
 
@@ -39,10 +39,38 @@ public class ApiController {
         return courseInfService.getAllCourses();
     }
 
-    @GetMapping(value = "/course/{id}")
+    @GetMapping(value = "/course/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getCoursebyId(@PathVariable("id") int id){
         Course response = courseInfService.getCourseById(id);
         return response == null ? ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ErrorDto(HttpStatus.NOT_FOUND.value(), message)): ResponseEntity.ok(response);
+                new ErrorDto(HttpStatus.NOT_FOUND.value(), messageNotfound)): ResponseEntity.ok(response);
+    }
+
+    @PostMapping(value = "/courses", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createCourse(@RequestBody Course course)  {
+        int response = 0;
+        try {
+            response = courseInfService.createCourse(course);
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorDto(HttpStatus.BAD_REQUEST.value(), messageRollback));
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping(value = "/courses/{id}")
+    public void updateCourse(@PathVariable("id") int id, @RequestBody Course course){
+        courseInfService.updateCourse(id, course);
+    }
+
+    @DeleteMapping(value = "/courses/{id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable("id") int id){
+        try{
+            courseInfService.deleteCourse(id);
+        }catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ErrorDto(HttpStatus.NOT_FOUND.value(), messageNotfound));
+        }
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

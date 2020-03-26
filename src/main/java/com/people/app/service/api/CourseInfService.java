@@ -21,14 +21,18 @@ public class CourseInfService {
         this.courseRepository = courseRepository;
     }
 
-    public Page<Course> getAllCourseByPage(){
-        Pageable pageRequest =  PageRequest.of(0, 5, Sort.by(
+    public Page<Course> getAllCourseByPage() {
+        Pageable pageRequest = PageRequest.of(0, 5, Sort.by(
                 Sort.Order.asc("code")
         ));
         return courseRepository.findAll(pageRequest);
     }
 
-    public List<Course> getAllCourses(){
+    public List<Course> getAllCourses() {
         return courseRepository.findAll();
+    }
+
+    public Course getCourseById(int id) {
+        return courseRepository.findCourseByCode(id);
     }
 }

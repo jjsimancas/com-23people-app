@@ -14,6 +14,8 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Integer>, PagingAndSortingRepository<Course, Integer> {
 
     Page<Course> findAll(Pageable pageable);
-    
+
     List<Course> findAll();
+
+    Course findCourseByCode(int id);
 }

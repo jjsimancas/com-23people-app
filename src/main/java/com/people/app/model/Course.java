@@ -1,5 +1,7 @@
 package com.people.app.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,9 +11,11 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_code")
+    @JsonProperty("id")
     private int code;
 
     @Column(name = "course_name")
+    @JsonProperty("name")
     private String name;
 
     public int getCode() {

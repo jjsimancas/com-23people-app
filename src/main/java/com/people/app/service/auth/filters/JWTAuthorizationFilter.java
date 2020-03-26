@@ -19,6 +19,7 @@ import static com.people.app.config.Constants.*;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
+    //Method for validation and authorization of the token sent by the client
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -39,11 +40,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     }
 
+    //Validation of the token
     private Claims validateToken(HttpServletRequest request) {
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
 
+    //Authorization of the token
     private void setUpSpringAuthentication(Claims claims) {
         List authorities = (List) claims.get("authorities");
         Set<SimpleGrantedAuthority> authList = new HashSet<>();
@@ -55,6 +58,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
+    //Check the structure of the token
     private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse response) {
         String authenticationHeader = request.getHeader(HEADER);
         if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX)) {

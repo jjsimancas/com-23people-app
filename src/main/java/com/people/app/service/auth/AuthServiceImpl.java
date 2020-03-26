@@ -20,6 +20,7 @@ public class AuthServiceImpl implements AuthService {
     private int jwtExpiration;
 
     public String tokenGenerator(){
+        //Generate list of authorities
         List grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList(ROLE_USER);
         List<Object> roles = new ArrayList<>();
@@ -28,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
             roles.add(aut);
         }
 
+        //Generate token for access
         String token = Jwts
                 .builder()
                 .setId("23peopleJWT")

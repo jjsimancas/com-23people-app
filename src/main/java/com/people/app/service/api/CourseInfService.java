@@ -22,6 +22,8 @@ public class CourseInfService {
         this.courseRepository = courseRepository;
     }
 
+
+    /*Method for query courses with paginated response*/
     public Page<Course> getAllCourseByPage() {
         Pageable pageRequest = PageRequest.of(0, 5, Sort.by(
                 Sort.Order.asc("code")
@@ -29,14 +31,17 @@ public class CourseInfService {
         return courseRepository.findAll(pageRequest);
     }
 
+    /*Method for query courses with a list of courses*/
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
+    /*Method for query courses with a Course Object filtering by ID*/
     public Course getCourseById(int id) {
         return courseRepository.findCourseByCode(id);
     }
 
+    /*Method for creation of courses with a int response*/
     public int createCourse(Course course) throws Exception {
         Course response = courseRepository.save(course);
         Optional<Course> validate = courseRepository.findById(response.getCode());
@@ -46,12 +51,14 @@ public class CourseInfService {
         return 0;
     }
 
+    /*Method for update courses filtering by ID*/
     public void updateCourse(int id, Course course){
         Course query = courseRepository.findById(id).get();
         query.setName(course.getName());
         courseRepository.save(query);
     }
 
+    /*Method for delete courses filtering by ID*/
     public void deleteCourse(int id) throws Exception{
         courseRepository.deleteById(id);
     }

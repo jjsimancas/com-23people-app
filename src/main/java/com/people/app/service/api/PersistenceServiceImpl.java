@@ -4,6 +4,7 @@ import com.people.app.model.Course;
 import com.people.app.model.Student;
 import com.people.app.repository.CourseRepository;
 import com.people.app.repository.StudentRepository;
+import com.people.app.util.Utils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,7 @@ public class PersistenceServiceImpl implements PersistenseService {
     }
 
     /*Method for creation of records with int response*/
-    public <T> int createCourse(T req) throws Exception {
+    public <T> int createRecord(T req) throws Exception {
         if (req instanceof Course) {
             Course course = courseRepository.save((Course) req);
             Optional<Course> validateCourse = courseRepository.findById(course.getCode());
@@ -57,17 +58,26 @@ public class PersistenceServiceImpl implements PersistenseService {
             }
         }
         if (req instanceof Student) {
-            Student student = studentRepository.save((Student) req);
-            Optional<Student> validateStudent = studentRepository.findById(student.getRut());
-            if (validateStudent.get().getRut() != 0) {
-                return 1;
+            if(Utils.rutVerifier(((Student) req).getRut())){
+                if(((Student) req).getAge() > 18){
+                    Student student = studentRepository.save((Student) req);
+                    Optional<Student> validateStudent = studentRepository.findById(student.getRut());
+                    if (validateStudent.get().getRut() != 0) {
+                        return 1;
+                    }
+                }else {
+                    return 2;
+                }
+            }else{
+                return 3;
             }
+
         }
         return 0;
     }
 
     /*Method for update data by type and filtering by ID*/
-    public <T> void updateRecord(int id, T req) {
+    public <T> void updateRecord(int id, T req) throws Exception{
         if (req instanceof Course) {
             Course course = courseRepository.findById(id).get();
             course.setName(((Course) req).getName());
@@ -75,10 +85,16 @@ public class PersistenceServiceImpl implements PersistenseService {
         }
         if (req instanceof Student) {
             Student student = studentRepository.findStudentByRut(id);
-            student.setRut(((Student) req).getRut());
-            student.setName(((Student) req).getName());
-            student.setLastName(((Student) req).getLastName());
-            student.setAge(((Student) req).getAge());
+            if(student != null){
+                student.setRut(((Student) req).getRut());
+                student.setName(((Student) req).getName());
+                student.setLastName(((Student) req).getLastName());
+                student.setAge(((Student) req).getAge());
+                studentRepository.save(student);
+            }else{
+                throw new Exception("Not Found");
+            }
+
         }
 
     }

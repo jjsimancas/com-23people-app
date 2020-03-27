@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wordpress
+  name: com-23people-app
   labels:
-    app: wordpress
+    app: 23people
 spec:
   selector:
     matchLabels:
-      app: wordpress
+      app: 23people
   template:
     metadata:
       labels:
-        app: wordpress
+        app: 23people
     spec:
       containers:
         - name: com-23people-app

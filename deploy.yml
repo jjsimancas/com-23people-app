@@ -23,27 +23,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: cloudsql-db-credentials
-                  key: username
+                  key: spring.datasource.username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: cloudsql-db-credentials
-                  key: password
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.16
-          command: ["/cloud_sql_proxy",
-                    "-instances=com-23people-app:southamerica-east1:mysql23people=tcp:3306",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          securityContext:
-            runAsUser: 2
-            allowPrivilegeEscalation: false
-          volumeMounts:
-            - name: cloudsql-instance-credentials
-              mountPath: /secrets/cloudsql
-              readOnly: true
-      volumes:
-        - name: cloudsql-instance-credentials
-          secret:
-            secretName: cloudsql-instance-credentials
+                  key: spring.datasource.password
+#        - name: cloudsql-proxy
+#          image: gcr.io/cloudsql-docker/gce-proxy:1.16
+#          command: ["/cloud_sql_proxy",
+#                    "-instances=com-23people-app:southamerica-east1:mysql23people=tcp:3306",
+#                    "-credential_file=/secrets/cloudsql/credentials.json"]
+#          securityContext:
+#            runAsUser: 2
+#            allowPrivilegeEscalation: false
+#          volumeMounts:
+#            - name: cloudsql-instance-credentials
+#              mountPath: /secrets/cloudsql
+#              readOnly: true
+#      volumes:
+#        - name: cloudsql-instance-credentials
+#          secret:
+#            secretName: cloudsql-instance-credentials
         
       

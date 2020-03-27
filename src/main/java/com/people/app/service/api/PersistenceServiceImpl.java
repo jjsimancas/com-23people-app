@@ -5,6 +5,7 @@ import com.people.app.model.Student;
 import com.people.app.repository.CourseRepository;
 import com.people.app.repository.StudentRepository;
 import com.people.app.util.Utils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class PersistenceServiceImpl implements PersistenseService {
+
+    @Value("${record.not.found}")
+    private String messageNotfound;
 
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
@@ -75,7 +79,6 @@ public class PersistenceServiceImpl implements PersistenseService {
         }
         return 0;
     }
-
     /*Method for update data by type and filtering by ID*/
     public <T> void updateRecord(int id, T req) throws Exception{
         if (req instanceof Course) {
@@ -92,13 +95,10 @@ public class PersistenceServiceImpl implements PersistenseService {
                 student.setAge(((Student) req).getAge());
                 studentRepository.save(student);
             }else{
-                throw new Exception("Not Found");
+                throw new Exception(messageNotfound);
             }
-
         }
-
     }
-
     /*Method for delete record by type and filtering by ID*/
     public void deleteRecord(int id, int tag) throws Exception {
         if (tag == 0) {

@@ -4,7 +4,7 @@ import com.people.app.model.Course;
 import com.people.app.model.Student;
 import com.people.app.repository.CourseRepository;
 import com.people.app.repository.StudentRepository;
-import com.people.app.util.Utils;
+import static com.people.app.util.Utils.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,7 +62,7 @@ public class PersistenceServiceImpl implements PersistenseService {
             }
         }
         if (req instanceof Student) {
-            if(Utils.rutVerifier(((Student) req).getRut())){
+            if(rutVerifier(((Student) req).getRut())){
                 if(((Student) req).getAge() > 18){
                     Student student = studentRepository.save((Student) req);
                     Optional<Student> validateStudent = studentRepository.findById(student.getRut());

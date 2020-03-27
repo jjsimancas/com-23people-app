@@ -32,7 +32,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.16
           command: ["/cloud_sql_proxy",
-                    "-instances=mysql23people=tcp:3306",
+                    "-instances=com-23people-app:southamerica-east1:mysql23people=tcp:3306",
                     "-credential_file=/secrets/cloudsql/credentials.json"]
           securityContext:
             runAsUser: 2

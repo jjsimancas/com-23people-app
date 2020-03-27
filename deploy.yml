@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: com-23people-app
-          image: gcr.io/$PROJECT_ID/deploy-23people-service:$COMMIT_SHA
+          image: gcr.io/com-23people-app/deploy-23people-app:8e4f64f
           ports:
             - containerPort: 8080
           env:

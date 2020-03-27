@@ -8,5 +8,3 @@ steps:
  # Deploy container image to Cloud Run
  - name: 'gcr.io/cloud-builders/gcloud'
    args: ['run', 'deploy', 'deploy-23people-app', '--image', 'gcr.io/$PROJECT_ID/deploy-23people-app:$COMMIT_SHA', '--region', ' southamerica-east1-a', '--platform', '--managed']
-   images:
-    - 'gcr.io/$PROJECT_ID/deploy-23people-app:$COMMIT_SHA'

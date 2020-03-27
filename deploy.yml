@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: 23people
+  name: com-23people-app
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: 23people
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: 23people
+    spec:
+      containers:
+        - env:
+            - name: BD_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  key: BD_USERNAME
+                  name: com-23people-app-config-wqkm
+            - name: BD_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  key: BD_PASSWORD
+                  name: com-23people-app-config-wqkm
+          image: gcr.io/com-23people-app/github.com/jjsimancas/com-23people-app
+          imagePullPolicy: IfNotPresent
+          name: com-23people-app-sha256-1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: 23people
+  name: com-23people-app-hpa-opin
+  namespace: default
+spec:
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: com-23people-app

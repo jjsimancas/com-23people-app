@@ -1,57 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: wordpress
   labels:
-    app: 23people
-  name: com-23people-app
-  namespace: default
+    app: wordpress
 spec:
-  replicas: 3
   selector:
     matchLabels:
-      app: 23people
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      app: wordpress
   template:
     metadata:
       labels:
-        app: 23people
+        app: wordpress
     spec:
       containers:
-        - env:
-            - name: BD_USERNAME
+        - name: com-23people-app
+          image: gcr.io/com-23people-app/com-23people-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: 127.0.0.1:3306
+            - name: DB_USERNAME
               valueFrom:
-                configMapKeyRef:
-                  key: BD_USERNAME
-                  name: com-23people-app-config-wqkm
-            - name: BD_PASSWORD
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: DB_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  key: BD_PASSWORD
-                  name: com-23people-app-config-wqkm
-          image: gcr.io/com-23people-app/github.com/jjsimancas/com-23people-app
-          imagePullPolicy: IfNotPresent
-          name: com-23people-app-sha256-1
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  labels:
-    app: 23people
-  name: com-23people-app-hpa-opin
-  namespace: default
-spec:
-  maxReplicas: 5
-  metrics:
-    - resource:
-        name: cpu
-        targetAverageUtilization: 80
-      type: Resource
-  minReplicas: 1
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: com-23people-app
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.16
+          command: ["/cloud_sql_proxy",
+                    "-instances=mysql23people=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          securityContext:
+            runAsUser: 2
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        
+      

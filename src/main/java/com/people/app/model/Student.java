@@ -1,18 +1,25 @@
 package com.people.app.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "student")
 public class Student {
 
     @Id
+    @Column(name = "student_rut")
     private Integer rut;
 
+    @Column(name = "student_name")
     private String name;
 
+    @Column(name = "student_lastname")
     private String lastName;
 
+    @Column(name = "student_age")
     private Integer age;
 
     public Integer getRut() {

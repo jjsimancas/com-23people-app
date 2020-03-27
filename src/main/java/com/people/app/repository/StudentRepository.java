@@ -1,6 +1,7 @@
 package com.people.app.repository;
 
 import com.people.app.model.Course;
+import com.people.app.model.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
@@ -10,15 +11,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CourseRepository extends CrudRepository<Course, Integer>, PagingAndSortingRepository<Course, Integer> {
+public interface StudentRepository extends CrudRepository<Student, Integer>, PagingAndSortingRepository<Student, Integer> {
 
-    Page<Course> findAll(Pageable pageable);
+    Page<Student> findAll(Pageable pageable);
 
-    List<Course> findAll();
+    List<Student> findAll();
 
-    Course findCourseByCode(int id);
+    Student findStudentByRut(int id);
 
-    <S extends Course> S save(S s);
+    <S extends Student> S save(S s);
 
     void deleteById(Integer integer);
 }

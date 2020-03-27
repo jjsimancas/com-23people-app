@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${value.jwtExpiration}")
     private int jwtExpiration;
+
 
     public String tokenGenerator(){
         //Generate list of authorities
@@ -38,7 +40,6 @@ public class AuthServiceImpl implements AuthService {
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).compact();
-
         return token;
     }
 }

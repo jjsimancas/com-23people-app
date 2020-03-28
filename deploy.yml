@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: com-23people-app
-          image: gcr.io/com-23people-app/deploy-23people-app:93de158
+          image: gcr.io/com-23people-app/com-23people-app:0.0.1
           ports:
             - containerPort: 8080
           env:
@@ -29,21 +29,21 @@ spec:
                 secretKeyRef:
                   name: cloudsql-db-credentials
                   key: spring.datasource.password
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.16
-          command: ["/cloud_sql_proxy",
-                    "-instances=com-23people-app:southamerica-east1:mysql23people=tcp:3306",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          securityContext:
-            runAsUser: 2
-            allowPrivilegeEscalation: false
-          volumeMounts:
-            - name: cloudsql-instance-credentials
-              mountPath: /secrets/cloudsql
-              readOnly: true
-      volumes:
-        - name: cloudsql-instance-credentials
-          secret:
-            secretName: cloudsql-instance-credentials
+#        - name: cloudsql-proxy
+#          image: gcr.io/cloudsql-docker/gce-proxy:1.16
+#          command: ["/cloud_sql_proxy",
+#                    "-instances=com-23people-app:southamerica-east1:mysql23people=tcp:3306",
+#                    "-credential_file=/secrets/cloudsql/credentials.json"]
+#          securityContext:
+#            runAsUser: 2
+#            allowPrivilegeEscalation: false
+#          volumeMounts:
+#            - name: cloudsql-instance-credentials
+#              mountPath: /secrets/cloudsql
+#              readOnly: true
+#      volumes:
+#        - name: cloudsql-instance-credentials
+#          secret:
+#            secretName: cloudsql-instance-credentials
         
       

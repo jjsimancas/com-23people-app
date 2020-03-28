@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: com-23people-app
-          image: gcr.io/com-23people-app/com-23people-app:0.0.3
+          image: gcr.io/com-23people-app/com-23people-app:0.0.2
           ports:
             - containerPort: 8080
           env:

@@ -2,6 +2,7 @@ package com.people.app.controller;
 
 import static com.people.app.config.Constants.*;
 import com.people.app.dto.ErrorDto;
+import com.people.app.exceptions.BadRequestException;
 import com.people.app.model.Course;
 import com.people.app.service.api.PersistenceServiceImpl;
 import com.people.app.service.api.PersistenseService;
@@ -56,38 +57,35 @@ public class CourseController {
     }
 
     @PostMapping(value = "/courses", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<? extends Object> createCourse(@RequestBody Course course)  {
+    public ResponseEntity<? extends Object> createCourse(@RequestBody Course course) throws BadRequestException {
         LOGGER.info("[Creating Courses]");
         int response = 0;
         try {
             response = persistenceService.createRecord(course);
         }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorDto(HttpStatus.BAD_REQUEST.value(), messageRollback));
+            throw new BadRequestException(messageRollback);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping(value = "/courses/{id}")
-    public ResponseEntity<? extends Object> updateCourse(@PathVariable("id") int id, @RequestBody Course course){
+    public ResponseEntity<? extends Object> updateCourse(@PathVariable("id") int id, @RequestBody Course course) throws BadRequestException {
         LOGGER.info("[Updating Course]");
         try{
             persistenceService.updateRecord(id, course);
         }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorDto(HttpStatus.NOT_FOUND.value(), messageNotfound));
+            throw new BadRequestException(messageNotfound);
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping(value = "/courses/{id}")
-    public ResponseEntity<? extends Object> deleteCourse(@PathVariable("id") int id){
+    public ResponseEntity<? extends Object> deleteCourse(@PathVariable("id") int id) throws BadRequestException {
         LOGGER.info("[Deleting Course]");
         try{
             persistenceService.deleteRecord(id, COURSES);
         }catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ErrorDto(HttpStatus.NOT_FOUND.value(), messageNotfound));
+            throw new BadRequestException(messageNotfound);
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }

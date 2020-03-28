@@ -22,7 +22,7 @@ public class AuthController {
 	@GetMapping("/token")
 	@ResponseBody
 	public LoginDto authenticateUser() {
-		LOGGER.info("[GENERATING TOKEN...]");
+		LOGGER.info("[GENERATING TOKEN]");
 		return new LoginDto(authService.tokenGenerator());
 	}
 }
